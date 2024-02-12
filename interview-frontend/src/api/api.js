@@ -45,7 +45,7 @@ export const getProcedures = async () => {
 };
 
 export const getPlanProcedures = async (planId) => {
-    const url = `${api_url}/PlanProcedure?$filter=planId eq ${planId}&$expand=procedure`;
+    const url = `${api_url}/PlanProcedure?$filter=planId eq ${planId}&$expand=procedure&$expand=assignedUsers`;
     const response = await fetch(url, {
         method: "GET",
     });
@@ -54,6 +54,31 @@ export const getPlanProcedures = async (planId) => {
 
     return await response.json();
 };
+
+export const assignUnAssignUserPlanProcedures = async(planId,procedureId,userId,assignmentType) => {
+    const url = `${api_url}/PlanProcedure/AssignUnAssignUserPlanProcedure`;
+    var command = {
+        planId: planId,
+        procedureId: procedureId,
+        userId: userId,
+        assignmentType: assignmentType
+    };
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(command),
+    });
+
+    if (!response.ok && assignmentType === AssignmentType.Assign) throw new Error("Failed to assign user to plan procedure");
+
+    if (!response.ok && assignmentType === AssignmentType.DeAssign)throw new Error("Failed to deassign user from plan procedure");
+
+    return true;
+}
 
 export const getUsers = async () => {
     const url = `${api_url}/Users`;
