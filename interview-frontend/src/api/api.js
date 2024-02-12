@@ -1,3 +1,5 @@
+import {AssignmentType} from "./Constants/AssignmentType"
+
 const api_url = "http://localhost:10010";
 
 export const startPlan = async () => {
